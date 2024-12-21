@@ -5,3 +5,4 @@
 - [ ] Make server handlers configurable
 - [ ] PHP 8.4 compatibility
 - [ ] More examples and documentation
+- [ ] Basic WebSocket support

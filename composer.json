@@ -11,7 +11,6 @@
   ],
   "require": {
     "php": "^8.1 || ^8.2 || ^8.3",
-    "http-interop/http-factory-guzzle": "^1.2",
     "imefisto/psr-swoole-native": "^1.0",
     "league/route": "^5.0",
     "php-di/php-di": "^7.0",
