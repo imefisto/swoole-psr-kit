@@ -25,9 +25,12 @@ class Router
 
     public function loadRoutes(array $routes): void
     {
-        foreach ($routes as $route) {
-            [$method, $path, $handler, $name] = $route;
+        foreach ($routes as $routeConfig) {
+            [$method, $path, $handler] = $routeConfig;
+            $name = $routeConfig[3] ?? null;
+
             $route = $this->router->map($method, $path, $handler);
+
             if ($name) {
                 $route->setName($name);
             }
