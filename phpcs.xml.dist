@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<ruleset name="Custom Standard">
+    <description>Custom coding standard</description>
+
+    <!-- Include all PHP files -->
+    <file>src</file>
+    <file>tests</file>
+
+    <!-- Exclude specific PEAR comment rules -->
+    <rule ref="PEAR">
+        <exclude name="PEAR.Commenting.FileComment.Missing"/>
+        <exclude name="PEAR.Commenting.ClassComment.Missing"/>
+        <exclude name="PEAR.Commenting.FunctionComment.Missing"/>
+        <exclude name="PEAR.NamingConventions.ValidFunctionName.PrivateNoUnderscore"/>
+        <exclude name="PEAR.NamingConventions.ValidVariableName.PrivateNoUnderscore"/>
+    </rule>
+</ruleset>
