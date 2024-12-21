@@ -24,17 +24,15 @@ use Imefisto\SwooleKit\Container\ContainerFactory;
 use Imefisto\SwooleKit\Server\Server;
 use Imefisto\SwooleKit\Routing\Router;
 
-// Create container
-$container = ContainerFactory::create($config, [], $routes);
+require __DIR__ . '/vendor/autoload.php';
 
-// Setup router
-$router = new Router();
-$router->loadRoutes([
-        ['GET', '/', 'App\Controller\HomeController::index', 'home'],
-]);
+$config = require __DIR__ . '/src/config/config.php';
+$dependencies = require __DIR__ . '/src/config/dependencies.php';
+$routes = require __DIR__ . '/src/config/routes.php';
 
-// Create and run server
-$server = new Server($container, $router);
+$container = ContainerFactory::create($config, $dependencies, $routes);
+
+$server = $container->get(Server::class);
 $server->run();
 ```
 
