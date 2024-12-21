@@ -20,15 +20,15 @@ composer require imefisto/swoole-psr-kit
 ## Basic Usage
 
 ```php
-use Imefisto\SwooleKit\Container\ContainerFactory;
-use Imefisto\SwooleKit\Server\Server;
-use Imefisto\SwooleKit\Routing\Router;
+use Imefisto\SwooleKit\Infrastructure\DependencyInjection\ContainerFactory;
+use Imefisto\SwooleKit\Infrastructure\Routing\Router;
+use Imefisto\SwooleKit\Infrastructure\Swoole\Server;
 
 require __DIR__ . '/vendor/autoload.php';
 
-$config = require __DIR__ . '/src/config/config.php';
-$dependencies = require __DIR__ . '/src/config/dependencies.php';
-$routes = require __DIR__ . '/src/config/routes.php';
+$config = include __DIR__ . '/src/config/config.php';
+$dependencies = include __DIR__ . '/src/config/dependencies.php';
+$routes = include __DIR__ . '/src/config/routes.php';
 
 $container = ContainerFactory::create($config, $dependencies, $routes);
 
