@@ -14,13 +14,13 @@ class Router
 {
     private LeagueRouter $router;
 
-    public function __construct(private readonly ContainerInterface $container)
+    public function __construct(ContainerInterface $container, array $routes)
     {
         $this->router = new LeagueRouter();
         $strategy = new ApplicationStrategy();
-        $strategy->setContainer($this->container);
+        $strategy->setContainer($container);
         $this->router->setStrategy($strategy);
-        $this->loadRoutes($this->container->get('routes'));
+        $this->loadRoutes($routes);
     }
 
     public function loadRoutes(array $routes): void
