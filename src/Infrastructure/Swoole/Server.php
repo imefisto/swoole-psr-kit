@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Imefisto\SwooleKit\Infrastructure\Swoole;
 
 use Imefisto\SwooleKit\Infrastructure\Routing\Router;
-use Imefisto\PsrSwoole\ServerRequest as PsrRequest;
+use Imefisto\PsrSwoole\PsrRequestFactory;
 use Imefisto\PsrSwoole\ResponseMerger;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
@@ -14,9 +14,6 @@ use Swoole\WebSocket\Server as SwooleServer;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\StreamFactoryInterface;
-use Psr\Http\Message\UploadedFileFactoryInterface;
-use Psr\Http\Message\UriFactoryInterface;
 
 class Server
 {
@@ -80,12 +77,8 @@ class Server
     private function convertSwooleRequestToPsr7(
         Request $request
     ): ServerRequestInterface {
-        return new PsrRequest(
-            $request,
-            $this->container->get(UriFactoryInterface::class),
-            $this->container->get(StreamFactoryInterface::class),
-            $this->container->get(UploadedFileFactoryInterface::class)
-        );
+        $factory = $this->container->get(PsrRequestFactory::class);
+        return $factory->createServerRequest($request);
     }
 
     private function sendPsr7ResponseToSwoole(

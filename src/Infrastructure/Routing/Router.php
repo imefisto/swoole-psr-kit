@@ -14,20 +14,23 @@ class Router
 {
     private LeagueRouter $router;
 
-    public function __construct(private readonly ContainerInterface $container)
+    public function __construct(ContainerInterface $container, array $routes)
     {
         $this->router = new LeagueRouter();
         $strategy = new ApplicationStrategy();
-        $strategy->setContainer($this->container);
+        $strategy->setContainer($container);
         $this->router->setStrategy($strategy);
-        $this->loadRoutes($this->container->get('routes'));
+        $this->loadRoutes($routes);
     }
 
     public function loadRoutes(array $routes): void
     {
-        foreach ($routes as $route) {
-            [$method, $path, $handler, $name] = $route;
+        foreach ($routes as $routeConfig) {
+            [$method, $path, $handler] = $routeConfig;
+            $name = $routeConfig[3] ?? null;
+
             $route = $this->router->map($method, $path, $handler);
+
             if ($name) {
                 $route->setName($name);
             }
