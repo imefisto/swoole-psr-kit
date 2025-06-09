@@ -11,7 +11,6 @@ use Swoole\Http\Request;
 use Swoole\Http\Response;
 use Swoole\WebSocket\Frame;
 use Swoole\WebSocket\Server as SwooleServer;
-use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -19,16 +18,13 @@ class Server
 {
     private SwooleServer $server;
     private TableRegistry $tableRegistry;
-    private Router $router;
-    private ContainerInterface $container;
-    private ResponseMerger $responseMerger;
 
-    public function __construct(ContainerInterface $container, Router $router)
-    {
-        $this->container = $container;
-        $this->router = $router;
+    public function __construct(
+        private readonly Router $router,
+        private readonly PsrRequestFactory $psrRequestFactory,
+        private readonly ResponseMerger $responseMerger
+    ) {
         $this->server = new SwooleServer('0.0.0.0', 8080);
-        $this->responseMerger = new ResponseMerger();
         $this->tableRegistry = new TableRegistry();
     }
 
@@ -90,8 +86,7 @@ class Server
     private function convertSwooleRequestToPsr7(
         Request $request
     ): ServerRequestInterface {
-        $factory = $this->container->get(PsrRequestFactory::class);
-        return $factory->createServerRequest($request);
+        return $this->psrRequestFactory->createServerRequest($request);
     }
 
     private function sendPsr7ResponseToSwoole(
