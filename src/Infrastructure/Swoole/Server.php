@@ -18,6 +18,7 @@ use Psr\Http\Message\ServerRequestInterface;
 class Server
 {
     private SwooleServer $server;
+    private TableRegistry $tableRegistry;
     private Router $router;
     private ContainerInterface $container;
     private ResponseMerger $responseMerger;
@@ -28,6 +29,17 @@ class Server
         $this->router = $router;
         $this->server = new SwooleServer('0.0.0.0', 8080);
         $this->responseMerger = new ResponseMerger();
+        $this->tableRegistry = new TableRegistry();
+    }
+
+    public function registerTable(string $name, Table $table): void
+    {
+        $this->tableRegistry->register($name, $table);
+    }
+
+    public function getTable(string $name): Table
+    {
+        return $this->tableRegistry->get($name);
     }
 
     public function run(): void
@@ -42,6 +54,7 @@ class Server
             'request',
             function (Request $request, Response $response) {
                 $psrRequest = $this->convertSwooleRequestToPsr7($request);
+                $psrRequest = $psrRequest->withAttribute('tables', $this->tableRegistry);
                 $psrResponse = $this->router->dispatch($psrRequest);
                 $this->sendPsr7ResponseToSwoole($psrResponse, $response);
             }
