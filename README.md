@@ -18,6 +18,10 @@ Install the package via Composer and require the PSR-7 implementation of your ch
 ```bash
 composer require imefisto/swoole-psr-kit
 composer require http-interop/http-factory-guzzle
+
+// or
+
+composer require nyholm/psr7
 ```
 
 ## Basic Usage
@@ -32,7 +36,7 @@ return [
 ]
 ```
 
-Create a `dependencies.php` file with your container definitions:
+Create a `dependencies.php` file with your container definitions. Example using Guzzle PSR package:
 
 ```php
 use Http\Factory\Guzzle\ResponseFactory;
@@ -71,9 +75,10 @@ use Imefisto\SwooleKit\Infrastructure\Swoole\Server;
 
 require __DIR__ . '/vendor/autoload.php';
 
-$config = include '/path/to/config.php';
-$dependencies = '/path/to/dependencies.php';
-$routes = include '/path/to/routes.php';
+// assumes you've created the config files within src/config
+$config = require_once __DIR__ . '/src/config/config.php';
+$dependencies = require_once __DIR__ . '/src/config/dependencies.php';
+$routes = require_once __DIR__ . '/src/config/routes.php';
 
 $container = ContainerFactory::create($config, $dependencies, $routes);
 
