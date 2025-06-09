@@ -24,71 +24,11 @@ composer require http-interop/http-factory-guzzle
 composer require nyholm/psr7
 ```
 
-## Basic Usage
+## Usage
 
-Lets setup a basic example using our provided Example controller.
+- Run `php examples/basic/server.php` for a basic example. Test it with `curl localhost:8080/example`.
 
-Create a `config.php` file with your server configuration:
-
-```php
-return [
-    // some configuration
-]
-```
-
-Create a `dependencies.php` file with your container definitions. Example using Guzzle PSR package:
-
-```php
-use Http\Factory\Guzzle\ResponseFactory;
-use Http\Factory\Guzzle\StreamFactory;
-use Http\Factory\Guzzle\UploadedFileFactory;
-use Http\Factory\Guzzle\UriFactory;
-use Psr\Http\Message\ResponseFactoryInterface;
-use Psr\Http\Message\StreamFactoryInterface;
-use Psr\Http\Message\UploadedFileFactoryInterface;
-use Psr\Http\Message\UriFactoryInterface;
-
-return [
-    ResponseFactoryInterface::class => \DI\get(ResponseFactory::class),
-    StreamFactoryInterface::class => \DI\get(StreamFactory::class),
-    UploadedFileFactoryInterface::class => \DI\get(UploadedFileFactory::class),
-    UriFactoryInterface::class => \DI\get(UriFactory::class),
-];
-```
-
-Create a `routes.php` file with your routes:
-
-```php
-use Imefisto\SwooleKit\Presentation\Controller\Example;
-
-return [
-    ['GET', '/example', Example::class, 'getExample'],
-];
-```
-
-Create a `server.php` file with your server implementation:
-
-```php
-use Imefisto\SwooleKit\Infrastructure\DependencyInjection\ContainerFactory;
-use Imefisto\SwooleKit\Infrastructure\Routing\Router;
-use Imefisto\SwooleKit\Infrastructure\Swoole\Server;
-
-require __DIR__ . '/vendor/autoload.php';
-
-// assumes you've created the config files within src/config
-$config = require_once __DIR__ . '/src/config/config.php';
-$dependencies = require_once __DIR__ . '/src/config/dependencies.php';
-$routes = require_once __DIR__ . '/src/config/routes.php';
-
-$container = ContainerFactory::create($config, $dependencies, $routes);
-
-$server = $container->get(Server::class);
-$server->run();
-```
-
-## Documentation
-
-For detailed documentation, please see the [/docs](/docs) directory.
+- Run `php examples/table/server.php` to run a version with Swoole table management. Add users with `curl localhost:8080/example -d user=some-user` and `curl localhost:8080/example` to get a list of the registered users.
 
 ## Contributing
 
