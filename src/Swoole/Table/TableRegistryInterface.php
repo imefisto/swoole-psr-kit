@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Imefisto\SwooleKit\Infrastructure\Swoole\Table;
+namespace Imefisto\SwooleKit\Swoole\Table;
 
 use Swoole\Table;
 

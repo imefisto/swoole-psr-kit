@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Imefisto\SwooleKit\Infrastructure\Swoole;
+namespace Imefisto\SwooleKit\Swoole;
 
-use Imefisto\SwooleKit\Infrastructure\Swoole\Handler\SwooleHandlerInterface;
-use Imefisto\SwooleKit\Infrastructure\Swoole\Table\TableRegistryInterface;
+use Imefisto\SwooleKit\Swoole\Handler\SwooleHandlerInterface;
+use Imefisto\SwooleKit\Swoole\Table\TableRegistryInterface;
 use Imefisto\PsrSwoole\PsrRequestFactory;
 use Imefisto\PsrSwoole\ResponseMerger;
 use Swoole\Http\Request;
