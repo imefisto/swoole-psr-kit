@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Imefisto\SwooleKit\Infrastructure\Swoole;
+namespace Imefisto\SwooleKit\Infrastructure\Swoole\Table;
 
 use Swoole\Table;
 
-class TableRegistry
+class TableRegistry implements TableRegistryInterface
 {
     private array $tables = [];
 
