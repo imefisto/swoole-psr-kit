@@ -9,6 +9,7 @@ use League\Route\Strategy\ApplicationStrategy;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
 
 class Router
 {
@@ -35,6 +36,11 @@ class Router
                 $route->setName($name);
             }
         }
+    }
+
+    public function addMiddleware(MiddlewareInterface $middleware): void
+    {
+        $this->router->middleware($middleware);
     }
 
     public function dispatch(ServerRequestInterface $request): ResponseInterface
