@@ -30,6 +30,8 @@ composer require nyholm/psr7
 
 - Run `php examples/table/server.php` to run a version with Swoole table management. Add users with `curl localhost:8080/example -d user=some-user` and `curl localhost:8080/example` to get a list of the registered users.
 
+- Run `php example/middleware/server.php` to see middlewares in action.
+
 ## Contributing
 
 Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
