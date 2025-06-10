@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Imefisto\SwooleKit\Infrastructure\Routing;
+namespace Imefisto\SwooleKit\Routing;
 
 use League\Route\Router as LeagueRouter;
 use League\Route\Strategy\ApplicationStrategy;

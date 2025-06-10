@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Imefisto\SwooleKit\Infrastructure\Swoole\Handler;
+namespace Imefisto\SwooleKit\Swoole\Handler;
 
-use Imefisto\SwooleKit\Infrastructure\Swoole\Table\TableRegistryInterface;
+use Imefisto\SwooleKit\Swoole\Table\TableRegistryInterface;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
 use Swoole\WebSocket\Frame;

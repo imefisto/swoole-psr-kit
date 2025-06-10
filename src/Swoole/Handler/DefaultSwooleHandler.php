@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Imefisto\SwooleKit\Infrastructure\Swoole\Handler;
+namespace Imefisto\SwooleKit\Swoole\Handler;
 
 use Imefisto\PsrSwoole\PsrRequestFactory;
 use Imefisto\PsrSwoole\ResponseMerger;
-use Imefisto\SwooleKit\Infrastructure\Routing\Router;
-use Imefisto\SwooleKit\Infrastructure\Swoole\Table\TableRegistryInterface;
+use Imefisto\SwooleKit\Routing\Router;
+use Imefisto\SwooleKit\Swoole\Table\TableRegistryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Swoole\Http\Request;
