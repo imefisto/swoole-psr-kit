@@ -38,10 +38,15 @@ class DefaultSwooleHandler implements SwooleHandlerInterface
 
     public function onRequest(Request $request, Response $response): void
     {
-        $psrRequest = $this->convertSwooleRequestToPsr7($request);
-        $psrRequest = $psrRequest->withAttribute('tables', $this->tableRegistry);
-        $psrResponse = $this->router->dispatch($psrRequest);
-        $this->sendPsr7ResponseToSwoole($psrResponse, $response);
+        try {
+            $psrRequest = $this->convertSwooleRequestToPsr7($request);
+            $psrRequest = $psrRequest->withAttribute('tables', $this->tableRegistry);
+            $psrResponse = $this->router->dispatch($psrRequest);
+            $this->sendPsr7ResponseToSwoole($psrResponse, $response);
+        } catch (\Throwable $e) {
+            $response->status(500);
+            $response->end('Internal Server Error');
+        }
     }
 
     protected function convertSwooleRequestToPsr7(
