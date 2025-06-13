@@ -10,6 +10,7 @@ use Imefisto\SwooleKit\Routing\Router;
 use Imefisto\SwooleKit\Swoole\Table\TableRegistryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
 use Swoole\WebSocket\Frame;
@@ -17,6 +18,7 @@ use Swoole\WebSocket\Server as SwooleServer;
 
 class DefaultSwooleHandler implements SwooleHandlerInterface
 {
+    private ?LoggerInterface $logger = null;
     private ?TableRegistryInterface $tableRegistry = null;
 
     public function __construct(
@@ -29,6 +31,11 @@ class DefaultSwooleHandler implements SwooleHandlerInterface
     public function setTableRegistry(?TableRegistryInterface $tableRegistry): void
     {
         $this->tableRegistry = $tableRegistry;
+    }
+
+    public function setLogger(LoggerInterface $logger): void
+    {
+        $this->logger = $logger;
     }
 
     public function onStart(SwooleServer $server): void
@@ -44,6 +51,7 @@ class DefaultSwooleHandler implements SwooleHandlerInterface
             $psrResponse = $this->router->dispatch($psrRequest);
             $this->sendPsr7ResponseToSwoole($psrResponse, $response);
         } catch (\Throwable $e) {
+            $this->logException($e);
             $response->status(500);
             $response->end('Internal Server Error');
         }
@@ -85,5 +93,17 @@ class DefaultSwooleHandler implements SwooleHandlerInterface
     public function onWorkerStart(SwooleServer $server, int $workerId): void
     {
         // Default empty implementation
+    }
+
+    private function logException(\Throwable $e)
+    {
+        if (is_null($this->logger)) {
+            return;
+        }
+
+        $this->logger->error(
+            $e->getMessage(),
+            [ 'file' => $e->getFile(), 'line' => $e->getLine() ]
+        );
     }
 }
