@@ -8,6 +8,7 @@ use Imefisto\PsrSwoole\PsrRequestFactory;
 use Imefisto\PsrSwoole\ResponseMerger;
 use Imefisto\SwooleKit\Routing\Router;
 use Imefisto\SwooleKit\Swoole\Table\TableRegistryInterface;
+use League\Route\Http\Exception as LeagueException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -50,6 +51,9 @@ class DefaultSwooleHandler implements SwooleHandlerInterface
             $psrRequest = $psrRequest->withAttribute('tables', $this->tableRegistry);
             $psrResponse = $this->router->dispatch($psrRequest);
             $this->sendPsr7ResponseToSwoole($psrResponse, $response);
+        } catch (LeagueException $e) {
+            $response->status($e->getStatusCode());
+            $response->end($e->getMessage());
         } catch (\Throwable $e) {
             $this->logException($e);
             $response->status(500);
