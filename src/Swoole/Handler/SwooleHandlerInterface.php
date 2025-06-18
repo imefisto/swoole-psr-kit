@@ -12,8 +12,6 @@ use Swoole\WebSocket\Server as SwooleServer;
 
 interface SwooleHandlerInterface
 {
-    public function setTableRegistry(?TableRegistryInterface $tableRegistry): void;
-
     public function onStart(SwooleServer $server): void;
 
     public function onRequest(Request $request, Response $response): void;

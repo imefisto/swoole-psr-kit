@@ -9,6 +9,7 @@ use Http\Factory\Guzzle\UriFactory;
 use Imefisto\SwooleKit\DependencyInjection\ContainerFactory;
 use Imefisto\SwooleKit\Routing\Router;
 use Imefisto\SwooleKit\Swoole\Server;
+use Imefisto\SwooleKit\Swoole\Handler\DefaultHttpHandler;
 use Imefisto\SwooleKit\Swoole\Handler\DefaultSwooleHandler;
 use Imefisto\SwooleKit\Swoole\Handler\SwooleHandlerInterface;
 use Nyholm\Psr7\Factory\Psr17Factory;
@@ -70,7 +71,8 @@ $dependencies = [
         $router->addMiddleware(new SomeMiddleware);
         return $router;
     },
-    SwooleHandlerInterface::class => autowire(DefaultSwooleHandler::class)
+    SwooleHandlerInterface::class => create(DefaultSwooleHandler::class)
+        ->method('setHttpHandler', get(DefaultHttpHandler::class))
 ];
 
 $container = ContainerFactory::create($config, $dependencies, $routes);
