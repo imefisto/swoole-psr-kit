@@ -5,9 +5,6 @@ declare(strict_types=1);
 namespace Imefisto\SwooleKit\Swoole;
 
 use Imefisto\SwooleKit\Swoole\Handler\SwooleHandlerInterface;
-use Swoole\Http\Request;
-use Swoole\Http\Response;
-use Swoole\WebSocket\Frame;
 use Swoole\WebSocket\Server as SwooleServer;
 
 class Server
@@ -15,9 +12,10 @@ class Server
     private SwooleServer $server;
 
     public function __construct(
-        private readonly SwooleHandlerInterface $handler
+        private readonly SwooleHandlerInterface $handler,
+        SwooleServer $server = null
     ) {
-        $this->server = new SwooleServer('0.0.0.0', 8080);
+        $this->server = $server ?? new SwooleServer('0.0.0.0', 8080);
     }
 
     public function run(): void
