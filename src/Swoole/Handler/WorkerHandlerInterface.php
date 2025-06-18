@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Imefisto\SwooleKit\Swoole\Handler;
 
-use Swoole\WebSocket\Server;
+use Swoole\Server;
 
 interface WorkerHandlerInterface
 {
