@@ -9,6 +9,7 @@ use Http\Factory\Guzzle\UriFactory;
 use Imefisto\SwooleKit\DependencyInjection\ContainerFactory;
 use Imefisto\SwooleKit\Routing\Router;
 use Imefisto\SwooleKit\Swoole\Server;
+use Imefisto\SwooleKit\Swoole\Handler\DefaultHttpHandler;
 use Imefisto\SwooleKit\Swoole\Handler\DefaultSwooleHandler;
 use Imefisto\SwooleKit\Swoole\Handler\SwooleHandlerInterface;
 use Imefisto\SwooleKit\Swoole\Table\TableRegistry;
@@ -80,7 +81,10 @@ $dependencies = [
     Router::class => function ($container) {
         return new Router($container, $container->get('routes'));
     },
-    SwooleHandlerInterface::class => autowire(DefaultSwooleHandler::class),
+    SwooleHandlerInterface::class => create(DefaultSwooleHandler::class)
+        ->method('setHttpHandler', get(DefaultHttpHandler::class)),
+    DefaultHttpHandler::class => autowire()
+        ->method('setTableRegistry', get(TableRegistryInterface::class)),
     TableRegistryInterface::class => function ($container) {
         $tableRegistry = new TableRegistry();
 
@@ -91,11 +95,6 @@ $dependencies = [
 
         return $tableRegistry;
     },
-    Server::class => create()
-        ->constructor(
-            get(SwooleHandlerInterface::class),
-            get(TableRegistryInterface::class)
-        )
 ];
 
 $container = ContainerFactory::create($config, $dependencies, $routes);
