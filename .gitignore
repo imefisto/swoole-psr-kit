@@ -2,3 +2,5 @@ composer.lock
 /vendor/
 *.swp
 *.swo
+/.phpunit.cache
+.phpunit.result.cache
