@@ -7,7 +7,6 @@ namespace Imefisto\SwooleKit\Swoole\Handler;
 use Imefisto\PsrSwoole\PsrRequestFactory;
 use Imefisto\PsrSwoole\ResponseMerger;
 use Imefisto\SwooleKit\Routing\Router;
-use Imefisto\SwooleKit\Swoole\Table\TableRegistryInterface;
 use League\Route\Http\Exception as LeagueException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -18,18 +17,12 @@ use Swoole\Http\Response;
 class DefaultHttpHandler implements HttpHandlerInterface
 {
     private ?LoggerInterface $logger = null;
-    private ?TableRegistryInterface $tableRegistry = null;
 
     public function __construct(
         private readonly Router $router,
         private readonly PsrRequestFactory $psrRequestFactory,
         private readonly ResponseMerger $responseMerger,
     ) {
-    }
-
-    public function setTableRegistry(?TableRegistryInterface $tableRegistry): void
-    {
-        $this->tableRegistry = $tableRegistry;
     }
 
     public function setLogger(LoggerInterface $logger): void
@@ -41,14 +34,6 @@ class DefaultHttpHandler implements HttpHandlerInterface
     {
         try {
             $psrRequest = $this->convertSwooleRequestToPsr7($request);
-
-            if (!is_null($this->tableRegistry)) {
-                $psrRequest = $psrRequest->withAttribute(
-                    'tables',
-                    $this->tableRegistry
-                );
-            }
-
             $psrResponse = $this->router->dispatch($psrRequest);
             $this->sendPsr7ResponseToSwoole($psrResponse, $response);
         } catch (LeagueException $e) {
