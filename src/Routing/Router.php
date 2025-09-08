@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Imefisto\SwooleKit\Routing;
 
 use League\Route\Router as LeagueRouter;
-use League\Route\Strategy\ApplicationStrategy;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -18,7 +17,7 @@ class Router
     public function __construct(ContainerInterface $container, array $routes)
     {
         $this->router = new LeagueRouter();
-        $strategy = new ApplicationStrategy();
+        $strategy = new RequestAwareStrategy();
         $strategy->setContainer($container);
         $this->router->setStrategy($strategy);
         $this->loadRoutes($routes);
