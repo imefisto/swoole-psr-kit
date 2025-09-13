@@ -7,6 +7,7 @@ use Http\Factory\Guzzle\StreamFactory;
 use Http\Factory\Guzzle\UploadedFileFactory;
 use Http\Factory\Guzzle\UriFactory;
 use Imefisto\SwooleKit\DependencyInjection\ContainerFactory;
+use Imefisto\SwooleKit\Routing\Route;
 use Imefisto\SwooleKit\Routing\Router;
 use Imefisto\SwooleKit\Swoole\Server;
 use Imefisto\SwooleKit\Swoole\Handler\DefaultHttpHandler;
@@ -69,8 +70,8 @@ class Example
 $config = [];
 
 $routes = [
-    ['GET', '/example', Example::class . '::list'],
-    ['POST', '/example', Example::class . '::register'],
+    new Route('GET', '/example', Example::class . '::list'),
+    new Route('POST', '/example', Example::class . '::register'),
 ];
 
 $dependencies = [

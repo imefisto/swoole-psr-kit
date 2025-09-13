@@ -7,6 +7,7 @@ use Http\Factory\Guzzle\StreamFactory;
 use Http\Factory\Guzzle\UploadedFileFactory;
 use Http\Factory\Guzzle\UriFactory;
 use Imefisto\SwooleKit\DependencyInjection\ContainerFactory;
+use Imefisto\SwooleKit\Routing\Route;
 use Imefisto\SwooleKit\Routing\Router;
 use Imefisto\SwooleKit\Swoole\Server;
 use Imefisto\SwooleKit\Swoole\Handler\DefaultHttpHandler;
@@ -55,10 +56,22 @@ class SomeMiddleware implements MiddlewareInterface
     }
 }
 
+class SomeRouteMiddleware implements MiddlewareInterface
+{
+    public function process(
+        ServerRequestInterface $request,
+        RequestHandlerInterface $handler
+    ): ResponseInterface {
+        $response = $handler->handle($request);
+        return $response->withHeader('X-Route-Header', 'MyValue');
+    }
+}
+
 $config = [];
 
 $routes = [
-    ['GET', '/example', Example::class],
+    new Route('GET', '/example', Example::class),
+    (new Route('GET', '/example2', Example::class))->middleware(new SomeRouteMiddleware),
 ];
 
 $dependencies = [
