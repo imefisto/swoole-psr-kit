@@ -34,6 +34,7 @@ class DefaultSwooleHandler implements SwooleHandlerInterface
     public function onStart(SwooleBaseServer $server): void
     {
         // Default empty implementation
+        return;
     }
 
     public function onRequest(Request $request, Response $response): void
