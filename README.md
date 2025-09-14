@@ -1,41 +1,103 @@
-# Swoole PSR Kit
+# SwooleKit
 
-A PSR-compliant toolkit for building high-performance HTTP and WebSocket servers using Swoole with dependency management.
+[![Latest Version on Packagist(ToDo)](https://img.shields.io/packagist/v/imefisto/swoole-kit.svg?style=flat-square)](https://packagist.org/packages/imefisto/swoole-kit)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 
-## Features
+A PHP library providing clean interfaces and handlers for Swoole server implementation, with support for HTTP, WebSocket, and Worker management.
 
-- PSR-7 HTTP message interfaces
-- PSR-15 middleware support
-- PSR-11 container integration
-- Named routes support via League Router
-- WebSocket support
-- Clean architecture structure
+> ⚠️ **Note**: This project is currently in beta/experimental stage. API may change without notice.
+
+## Requirements
+
+- PHP 8.3+
+- Swoole 5.1+
 
 ## Installation
 
-Install the package via Composer and require the PSR-7 implementation of your choice:
-
 ```bash
-composer require imefisto/swoole-psr-kit
-composer require http-interop/http-factory-guzzle
-
-// or
-
-composer require nyholm/psr7
+composer require imefisto/swoole-kit
 ```
 
-## Usage
+## Features
 
-- Run `php examples/basic/server.php` for a basic example. Test it with `curl localhost:8080/example`.
+- HTTP request handling with PSR-7 compliance
+- WebSocket server support with clean event handlers
+- Worker management interface
+- Middleware support
+- Extensible handler system
 
-- Run `php examples/table/server.php` to run a version with Swoole table management. Add users with `curl localhost:8080/example -d user=some-user` and `curl localhost:8080/example` to get a list of the registered users.
+## Basic Usage
 
-- Run `php example/middleware/server.php` to see middlewares in action.
+### HTTP Server
+
+```php
+use Imefisto\SwooleKit\Swoole\Handler\DefaultSwooleHandler;
+use Imefisto\SwooleKit\Swoole\Handler\HttpHandlerInterface;
+use Imefisto\SwooleKit\Swoole\Server;
+use Swoole\Http\Request;
+use Swoole\Http\Response;
+
+class MyHttpHandler implements HttpHandlerInterface 
+{
+    public function onRequest(Request $request, Response $response): void 
+    {
+        $response->end("Hello World!");
+    }
+}
+
+$handler = new DefaultSwooleHandler();
+$handler->setHttpHandler(new MyHttpHandler());
+
+$server = new Server($handler);
+$server->run();
+```
+
+### WebSocket Server
+
+```php
+use Imefisto\SwooleKit\Swoole\Handler\DefaultSwooleHandler;
+use Imefisto\SwooleKit\Swoole\Handler\WebSocketHandlerInterface;
+use Swoole\WebSocket\Server;
+use Swoole\WebSocket\Frame;
+use Swoole\Http\Request;
+
+class MyWebSocketHandler implements WebSocketHandlerInterface 
+{
+    public function onOpen(Server $server, Request $request): void 
+    {
+        echo "Connection open: {$request->fd}\n";
+    }
+
+    public function onMessage(Server $server, Frame $frame): void 
+    {
+        $server->push($frame->fd, "Received: {$frame->data}");
+    }
+
+    public function onClose(Server $server, int $fd): void 
+    {
+        echo "Connection closed: {$fd}\n";
+    }
+
+    public function onDisconnect(Server $server, int $fd): void 
+    {
+        echo "Client disconnected: {$fd}\n";
+    }
+}
+
+$handler = new DefaultSwooleHandler();
+$handler->setWebSocketHandler(new MyWebSocketHandler());
+
+$server = new Swoole\WebSocket\Server('127.0.0.1', 8080);
+$server->on('open', [$handler, 'onOpen']);
+$server->on('message', [$handler, 'onMessage']);
+$server->on('close', [$handler, 'onClose']);
+$server->start();
+```
 
 ## Contributing
 
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+The MIT License (MIT). Please see [License File](LICENSE) for more information.
