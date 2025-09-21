@@ -33,7 +33,7 @@ composer require imefisto/swoole-kit
 ```php
 use Imefisto\SwooleKit\Swoole\Handler\DefaultSwooleHandler;
 use Imefisto\SwooleKit\Swoole\Handler\HttpHandlerInterface;
-use Imefisto\SwooleKit\Swoole\Server;
+use Imefisto\SwooleKit\Swoole\SimpleServer;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
 
@@ -48,7 +48,7 @@ class MyHttpHandler implements HttpHandlerInterface
 $handler = new DefaultSwooleHandler();
 $handler->setHttpHandler(new MyHttpHandler());
 
-$server = new Server($handler);
+$server = new SimpleServer($handler);
 $server->run();
 ```
 
@@ -57,9 +57,18 @@ $server->run();
 ```php
 use Imefisto\SwooleKit\Swoole\Handler\DefaultSwooleHandler;
 use Imefisto\SwooleKit\Swoole\Handler\WebSocketHandlerInterface;
+use Imefisto\SwooleKit\Swoole\SimpleServer;
 use Swoole\WebSocket\Server;
 use Swoole\WebSocket\Frame;
 use Swoole\Http\Request;
+
+class MyHttpHandler implements HttpHandlerInterface 
+{
+    public function onRequest(Request $request, Response $response): void 
+    {
+        $response->end("Hello World!");
+    }
+}
 
 class MyWebSocketHandler implements WebSocketHandlerInterface 
 {
@@ -85,13 +94,14 @@ class MyWebSocketHandler implements WebSocketHandlerInterface
 }
 
 $handler = new DefaultSwooleHandler();
+$handler->setHttpHandler(new MyHttpHandler());
 $handler->setWebSocketHandler(new MyWebSocketHandler());
 
-$server = new Swoole\WebSocket\Server('127.0.0.1', 8080);
-$server->on('open', [$handler, 'onOpen']);
-$server->on('message', [$handler, 'onMessage']);
-$server->on('close', [$handler, 'onClose']);
-$server->start();
+$server = new SimpleServer(
+    $handler,
+    new Swoole\WebSocket\Server('127.0.0.1', 8080)
+);
+$server->run();
 ```
 
 ## Contributing
