@@ -7,7 +7,7 @@ namespace Imefisto\SwooleKit\Swoole\Handler;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
 
-interface HttpHandlerInterface
+interface HttpHandler
 {
     public function onRequest(Request $request, Response $response): void;
 }

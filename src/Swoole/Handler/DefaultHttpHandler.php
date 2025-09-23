@@ -14,7 +14,7 @@ use Psr\Log\LoggerInterface;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
 
-class DefaultHttpHandler implements HttpHandlerInterface
+class DefaultHttpHandler implements HttpHandler
 {
     private ?LoggerInterface $logger = null;
 
