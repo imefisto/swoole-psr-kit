@@ -7,20 +7,16 @@ namespace Imefisto\SwooleKit\Swoole\Handler;
 use Imefisto\PsrSwoole\PsrRequestFactory;
 use Imefisto\PsrSwoole\ResponseMerger;
 use Imefisto\SwooleKit\Routing\Router;
-use Imefisto\SwooleKit\Swoole\Table\TableRegistryInterface;
 use League\Route\Http\Exception as LeagueException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
-use Swoole\WebSocket\Frame;
-use Swoole\WebSocket\Server as SwooleServer;
 
-class DefaultSwooleHandler implements SwooleHandlerInterface
+class DefaultHttpHandler implements HttpHandler
 {
     private ?LoggerInterface $logger = null;
-    private ?TableRegistryInterface $tableRegistry = null;
 
     public function __construct(
         private readonly Router $router,
@@ -29,26 +25,15 @@ class DefaultSwooleHandler implements SwooleHandlerInterface
     ) {
     }
 
-    public function setTableRegistry(?TableRegistryInterface $tableRegistry): void
-    {
-        $this->tableRegistry = $tableRegistry;
-    }
-
     public function setLogger(LoggerInterface $logger): void
     {
         $this->logger = $logger;
-    }
-
-    public function onStart(SwooleServer $server): void
-    {
-        // Default empty implementation
     }
 
     public function onRequest(Request $request, Response $response): void
     {
         try {
             $psrRequest = $this->convertSwooleRequestToPsr7($request);
-            $psrRequest = $psrRequest->withAttribute('tables', $this->tableRegistry);
             $psrResponse = $this->router->dispatch($psrRequest);
             $this->sendPsr7ResponseToSwoole($psrResponse, $response);
         } catch (LeagueException $e) {
@@ -74,32 +59,7 @@ class DefaultSwooleHandler implements SwooleHandlerInterface
         return $this->responseMerger->toSwoole($psrResponse, $swooleResponse);
     }
 
-    public function onOpen(SwooleServer $server, Request $request): void
-    {
-        // Default empty implementation
-    }
-
-    public function onMessage(SwooleServer $server, Frame $frame): void
-    {
-        // Default empty implementation
-    }
-
-    public function onDisconnect(SwooleServer $server, int $fd): void
-    {
-        // Default empty implementation
-    }
-
-    public function onClose(SwooleServer $server, int $fd): void
-    {
-        // Default empty implementation
-    }
-
-    public function onWorkerStart(SwooleServer $server, int $workerId): void
-    {
-        // Default empty implementation
-    }
-
-    private function logException(\Throwable $e)
+    private function logException(\Throwable $e): void
     {
         if (is_null($this->logger)) {
             return;

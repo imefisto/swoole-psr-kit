@@ -1,41 +1,39 @@
-# Swoole PSR Kit
+# SwooleKit
 
-A PSR-compliant toolkit for building high-performance HTTP and WebSocket servers using Swoole with dependency management.
+[![Latest Version on Packagist(ToDo)](https://img.shields.io/packagist/v/imefisto/swoole-kit.svg?style=flat-square)](https://packagist.org/packages/imefisto/swoole-kit)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 
-## Features
+A PHP library providing clean interfaces and handlers for Swoole server implementation, with support for HTTP, WebSocket, and Worker management.
 
-- PSR-7 HTTP message interfaces
-- PSR-15 middleware support
-- PSR-11 container integration
-- Named routes support via League Router
-- WebSocket support
-- Clean architecture structure
+> ⚠️ **Note**: This project is currently in beta/experimental stage. API may change without notice.
+
+## Requirements
+
+- PHP 8.3+
+- Swoole 5.1+
 
 ## Installation
 
-Install the package via Composer and require the PSR-7 implementation of your choice:
-
 ```bash
-composer require imefisto/swoole-psr-kit
-composer require http-interop/http-factory-guzzle
-
-// or
-
-composer require nyholm/psr7
+composer require imefisto/swoole-kit
 ```
 
-## Usage
+## Features
 
-- Run `php examples/basic/server.php` for a basic example. Test it with `curl localhost:8080/example`.
+- HTTP request handling with PSR-7 compliance
+- WebSocket server support with clean event handlers
+- Worker management interface
+- Middleware support
+- Extensible handler system
 
-- Run `php examples/table/server.php` to run a version with Swoole table management. Add users with `curl localhost:8080/example -d user=some-user` and `curl localhost:8080/example` to get a list of the registered users.
+## Basic Usage
 
-- Run `php example/middleware/server.php` to see middlewares in action.
+See the folder `examples/`.
 
 ## Contributing
 
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+The MIT License (MIT). Please see [License File](LICENSE) for more information.

@@ -26,14 +26,19 @@ class Router
 
     public function loadRoutes(array $routes): void
     {
-        foreach ($routes as $routeConfig) {
-            [$method, $path, $handler] = $routeConfig;
-            $name = $routeConfig[3] ?? null;
+        foreach ($routes as $route) {
+            if (!$route instanceof Route) {
+                throw new \InvalidArgumentException('Expected Route object');
+            }
 
-            $route = $this->router->map($method, $path, $handler);
+            $leagueRoute = $this->router->map(
+                $route->method,
+                $route->path,
+                $route->handler
+            );
 
-            if ($name) {
-                $route->setName($name);
+            foreach ($route->getMiddlewares() as $middleware) {
+                $leagueRoute->middleware($middleware);
             }
         }
     }
