@@ -9,10 +9,9 @@ use Http\Factory\Guzzle\UriFactory;
 use Imefisto\SwooleKit\DependencyInjection\ContainerFactory;
 use Imefisto\SwooleKit\Routing\Route;
 use Imefisto\SwooleKit\Routing\Router;
-use Imefisto\SwooleKit\Swoole\Server;
 use Imefisto\SwooleKit\Swoole\Handler\DefaultHttpHandler;
-use Imefisto\SwooleKit\Swoole\Handler\DefaultSwooleHandler;
-use Imefisto\SwooleKit\Swoole\Handler\SwooleHandlerInterface;
+use Imefisto\SwooleKit\Swoole\Handler\HttpHandler;
+use Imefisto\SwooleKit\Swoole\SimpleServer;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -26,7 +25,7 @@ use function DI\autowire;
 use function DI\create;
 use function DI\get;
 
-class Example
+class MyController
 {
     public function __construct(
         private ResponseFactoryInterface $responseFactory
@@ -45,7 +44,7 @@ class Example
     }
 }
 
-class SomeMiddleware implements MiddlewareInterface
+class MyMiddleware implements MiddlewareInterface
 {
     public function process(
         ServerRequestInterface $request,
@@ -56,7 +55,7 @@ class SomeMiddleware implements MiddlewareInterface
     }
 }
 
-class SomeRouteMiddleware implements MiddlewareInterface
+class MyRouteMiddleware implements MiddlewareInterface
 {
     public function process(
         ServerRequestInterface $request,
@@ -70,8 +69,8 @@ class SomeRouteMiddleware implements MiddlewareInterface
 $config = [];
 
 $routes = [
-    new Route('GET', '/example', Example::class),
-    (new Route('GET', '/example2', Example::class))->middleware(new SomeRouteMiddleware),
+    new Route('GET', '/hello', MyController::class),
+    (new Route('GET', '/hello-m', MyController::class))->middleware(new MyRouteMiddleware),
 ];
 
 $dependencies = [
@@ -81,14 +80,17 @@ $dependencies = [
     UriFactoryInterface::class => autowire(Psr17Factory::class),
     Router::class => function ($container) {
         $router = new Router($container, $container->get('routes'));
-        $router->addMiddleware(new SomeMiddleware);
+        $router->addMiddleware(new MyMiddleware);
         return $router;
     },
-    SwooleHandlerInterface::class => create(DefaultSwooleHandler::class)
-        ->method('setHttpHandler', get(DefaultHttpHandler::class))
+    HttpHandler::class => autowire(DefaultHttpHandler::class),
+    SimpleServer::class => create()
+        ->constructor(
+            get(HttpHandler::class)
+        ),
 ];
 
 $container = ContainerFactory::create($config, $dependencies, $routes);
 
-$server = $container->get(Server::class);
+$server = $container->get(SimpleServer::class);
 $server->run();
