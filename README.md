@@ -1,6 +1,6 @@
 # SwooleKit
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/imefisto/swoole-kit.svg?style=flat-square)](https://packagist.org/packages/imefisto/swoole-kit)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/imefisto/swoole-psr-kit.svg?style=flat-square)](https://packagist.org/packages/imefisto/swoole-psr-kit)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 
 A PHP library providing clean interfaces and handlers for Swoole server implementation, with support for HTTP, WebSocket, and Worker management.
@@ -25,12 +25,12 @@ If you're upgrading from version 1.x, please note there are breaking changes in 
 
 For new projects (recommended):
 ```bash
-composer require imefisto/swoole-kit:^2.0@alpha
+composer require imefisto/swoole-psr-kit:^2.0@alpha
 ```
 
 For existing 1.x projects:
 ```bash
-composer require imefisto/swoole-kit:^1.1
+composer require imefisto/swoole-psr-kit:^1.1
 ```
 
 ## Features
