@@ -2,8 +2,61 @@
 
 ## Short term (2.x)
 - [ ] Make port parametrizable
-- [ ] PHP 8.4 compatibility
+- [ ] PHP 8.4 compatibility (see plan below)
 - [ ] More examples and documentation
+
+---
+
+## PHP 8.4 compatibility via Rector
+
+PHP 8.4 deprecates implicit nullable parameters (`Type $param = null` → `?Type $param = null`).
+The affected file is `src/Swoole/SimpleServer.php` (the `$server` parameter).
+
+Downstream consumers also trigger deprecations from `php-di/php-di`, `opis/closure`, and `psr/http-factory`
+— those are upstream problems to track, not fix here.
+
+### Plan
+
+1. **Add Rector** as a dev dependency:
+   ```
+   composer require --dev rector/rector
+   ```
+
+2. **Configure `rector.php`** at project root with the PHP 8.4 set:
+   ```php
+   use Rector\Config\RectorConfig;
+   use Rector\Set\ValueObject\SetList;
+
+   return RectorConfig::configure()
+       ->withPaths([__DIR__ . '/src'])
+       ->withSets([SetList::PHP_84]);
+   ```
+   The relevant rule is `Rector\TypeDeclaration\Rector\FunctionLike\AddParamTypeBasedOnPropFetchRector`
+   (or more precisely the implicit-nullable rule: `Rector\Php84\Rector\Param\ExplicitNullableParamTypeRector`).
+
+3. **Run and review**:
+   ```
+   vendor/bin/rector process --dry-run
+   vendor/bin/rector process
+   ```
+
+4. **Update `composer.json`** PHP constraint:
+   ```
+   "php": "^8.1 || ^8.4"
+   ```
+   (or just `"^8.1"` if the rest of the codebase already supports 8.4 without issues)
+
+5. **Tag `2.0.1`** (patch — no API change, only type annotation fix).
+
+### What changes
+
+Only `SimpleServer.php` line 23:
+```php
+// before
+\Swoole\Server $server = null
+// after
+?\Swoole\Server $server = null
+```
 
 ---
 
