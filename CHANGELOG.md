@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.0-alpha.2] - 2026-10-14
+## [2.0.0-alpha.3] - 2026-10-14
 
 ### Added
 - `Testing\TestHttpKernel` dispatches PSR-7 requests through the router without starting a server.
@@ -18,6 +18,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `SimpleServer` creates a `Swoole\WebSocket\Server` by default when a `WebSocketHandler` is given; WebSocket events were silently ignored on the plain HTTP server.
 - `WorkerHandler::onWorkerError()` and `onWorkerExit()` are now registered.
 - `composer cs-check` failed due to an invalid sniff reference in `phpcs.xml.dist`.
+
+## [2.0.0-alpha.2] - 2025-09-26
+
+### Changed
+- README update.
 
 ## [2.0.0-alpha.1] - 2024-XX-XX
 
