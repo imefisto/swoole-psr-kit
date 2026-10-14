@@ -65,6 +65,23 @@ $kernel = new TestHttpKernel(
 $response = $kernel->handle(new ServerRequest('GET', '/hello'));
 ```
 
+`RequestBuilder` cuts down request setup. It's immutable, so a base builder can be shared between tests:
+
+```php
+use Imefisto\SwooleKit\Testing\RequestBuilder;
+use Nyholm\Psr7\Factory\Psr17Factory;
+
+$psr17Factory = new Psr17Factory();
+$builder = (new RequestBuilder($psr17Factory, $psr17Factory))
+    ->withHeader('Authorization', 'Bearer token');
+
+$response = $kernel->handle(
+    $builder->post('/users?notify=1')->withJson(['name' => 'Ada'])->build()
+);
+```
+
+`withJson()` sets the body and `Content-Type` but not the parsed body; register `JsonBodyParserMiddleware` as you would on the server.
+
 Routing errors (404, 405) and `HttpException`s become responses, as they do on the server. Any other exception is rethrown so your test shows the real failure.
 
 ## Contributing

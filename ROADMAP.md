@@ -167,7 +167,7 @@ Ship test helpers under a `Testing\` namespace (or a companion `imefisto/swoole-
 - **`InMemoryWebSocketPusher`** — implements `WebSocketPusher`, records pushed frames for assertion.
 - **`FakeTaskDispatcher`** — implements `TaskDispatcher`, captures dispatched tasks.
 - [x] **`TestHttpKernel`** — wraps the router and PSR handler to dispatch a `ServerRequestInterface` and return a `ResponseInterface` without starting a server. Analogous to Symfony's `HttpKernelBrowser`.
-- **`RequestBuilder`** — fluent builder for `ServerRequestInterface` to reduce test setup boilerplate.
+- [x] **`RequestBuilder`** — fluent builder for `ServerRequestInterface` to reduce test setup boilerplate.
 
 These are most valuable once Phases 1–3 are stable.
 

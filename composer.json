@@ -16,6 +16,7 @@
     "league/route": "^6",
     "php-di/php-di": "^7.0",
     "psr/container": "^2.0",
+    "psr/http-factory": "^1.0",
     "psr/http-message": "^1.0",
     "psr/http-server-middleware": "^1.0",
     "psr/log": "^3.0"
