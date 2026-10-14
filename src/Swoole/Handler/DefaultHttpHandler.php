@@ -6,6 +6,7 @@ namespace Imefisto\SwooleKit\Swoole\Handler;
 
 use Imefisto\PsrSwoole\PsrRequestFactory;
 use Imefisto\PsrSwoole\ResponseMerger;
+use Imefisto\SwooleKit\Http\Exception\HttpException;
 use Imefisto\SwooleKit\Routing\Router;
 use League\Route\Http\Exception as LeagueException;
 use Psr\Http\Message\ResponseInterface;
@@ -37,6 +38,12 @@ class DefaultHttpHandler implements HttpHandler
             $psrResponse = $this->router->dispatch($psrRequest);
             $this->sendPsr7ResponseToSwoole($psrResponse, $response);
         } catch (LeagueException $e) {
+            $response->status($e->getStatusCode());
+            foreach ($e->getHeaders() as $name => $value) {
+                $response->header($name, $value);
+            }
+            $response->end($e->getMessage());
+        } catch (HttpException $e) {
             $response->status($e->getStatusCode());
             $response->end($e->getMessage());
         } catch (\Throwable $e) {

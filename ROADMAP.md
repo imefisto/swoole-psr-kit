@@ -1,8 +1,8 @@
 # Roadmap
 
 ## Short term (2.x)
-- [ ] Make port parametrizable
-- [ ] PHP 8.4 compatibility (see plan below)
+- [x] Make port parametrizable
+- [x] PHP 8.4 compatibility (implicit nullable fixed manually; the Rector plan below is no longer needed for it)
 - [ ] More examples and documentation
 
 ---
