@@ -45,6 +45,28 @@ composer require imefisto/swoole-psr-kit:^1.1
 
 See the folder `examples/`.
 
+## Testing
+
+`TestHttpKernel` dispatches PSR-7 requests through your routes without starting a server, so HTTP tests don't need the Swoole extension:
+
+```php
+use Imefisto\SwooleKit\DependencyInjection\ContainerFactory;
+use Imefisto\SwooleKit\Routing\Router;
+use Imefisto\SwooleKit\Testing\TestHttpKernel;
+use Nyholm\Psr7\ServerRequest;
+use Psr\Http\Message\ResponseFactoryInterface;
+
+$container = ContainerFactory::create($config, $dependencies, $routes);
+$kernel = new TestHttpKernel(
+    $container->get(Router::class),
+    $container->get(ResponseFactoryInterface::class)
+);
+
+$response = $kernel->handle(new ServerRequest('GET', '/hello'));
+```
+
+Routing errors (404, 405) and `HttpException`s become responses, as they do on the server. Any other exception is rethrown so your test shows the real failure.
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
