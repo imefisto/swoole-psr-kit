@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- `SimpleServer` accepts `host` and `port` constructor arguments (default `0.0.0.0:8080`).
+
+### Fixed
+- PHP 8.4 deprecation: `SimpleServer`'s `$server` parameter is now explicitly nullable.
+- `HttpException` subclasses (e.g. `UnauthorizedException`) now respond with their status code instead of 500.
+- Headers from League route exceptions (e.g. `Allow` on 405) are now sent.
+- `SimpleServer` creates a `Swoole\WebSocket\Server` by default when a `WebSocketHandler` is given; WebSocket events were silently ignored on the plain HTTP server.
+- `WorkerHandler::onWorkerError()` and `onWorkerExit()` are now registered.
+- `composer cs-check` failed due to an invalid sniff reference in `phpcs.xml.dist`.
+
 ## [2.0.0-alpha.1] - 2024-XX-XX
 
 ### ⚠️ Breaking Changes

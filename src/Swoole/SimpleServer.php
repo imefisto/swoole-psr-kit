@@ -20,9 +20,11 @@ class SimpleServer
         private readonly ?WorkerHandler $workerHandler = null,
         private readonly ?TaskHandler $taskHandler = null,
         private readonly ?ServerLifecycleHandler $lifecycleHandler = null,
-        \Swoole\Server $server = null
+        ?\Swoole\Server $server = null,
+        string $host = '0.0.0.0',
+        int $port = 8080
     ) {
-        $this->server = $server ?? new \Swoole\Http\Server('0.0.0.0', 8080);
+        $this->server = $server ?? $this->createServer($host, $port);
     }
 
     public function run(): void
@@ -45,6 +47,8 @@ class SimpleServer
 
         if ($this->workerHandler) {
             $this->server->on('workerStart', $this->workerHandler->onWorkerStart(...));
+            $this->server->on('workerError', $this->workerHandler->onWorkerError(...));
+            $this->server->on('workerExit', $this->workerHandler->onWorkerExit(...));
         }
 
         if ($this->taskHandler) {
@@ -53,5 +57,14 @@ class SimpleServer
         }
 
         $this->server->start();
+    }
+
+    private function createServer(string $host, int $port): \Swoole\Server
+    {
+        if ($this->webSocketHandler) {
+            return new \Swoole\WebSocket\Server($host, $port);
+        }
+
+        return new \Swoole\Http\Server($host, $port);
     }
 }
