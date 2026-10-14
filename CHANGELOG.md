@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - README update.
 
-## [2.0.0-alpha.1] - 2024-XX-XX
+## [2.0.0-alpha.1] - 2025-09-23
 
 ### ⚠️ Breaking Changes
 - The Server was renamed to SimpleServer. The constructor will allow composition.
