@@ -9,7 +9,7 @@ A PHP library providing clean interfaces and handlers for Swoole server implemen
 
 ## Version Information
 
-- **Current**: `2.0.0-alpha.3` (Alpha - Breaking changes from 1.x)
+- **Current**: `2.0.0-alpha.4` (Alpha - Breaking changes from 1.x)
 - **Previous**: `1.1.0` (Legacy - Not recommended for new projects)
 
 ### Migration from 1.x
